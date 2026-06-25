@@ -1,31 +1,48 @@
-import 'dotenv/config';
+import 'express-async-errors';
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
-import cors from 'cors';
 import mongoose from 'mongoose';
-import employeeRoutes from './routes/employees.js';
-import orderRoutes from './routes/order.js';
-import productRoutes from './routes/product.js';
+import cors from 'cors';
+
 import authRoutes from './routes/auth.js';
+import orderRoutes from './routes/orders.js';
+import productRoutes from './routes/products.js';
+import deliveryRoutes from './routes/delivery.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true,
+}));
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Wizago Shop API is running 🧙', status: 'ok' });
+});
 
 app.use('/api/auth', authRoutes);
-app.use('/api/employees', employeeRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/delivery', deliveryRoutes);
 
-app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
+const MONGO_URI = process.env.MONGODB_URI;
+if (!MONGO_URI || !MONGO_URI.startsWith('mongodb')) {
+  console.error('❌ MONGODB_URI is missing or invalid. Set it in your environment variables.');
+  console.error('   It should start with "mongodb+srv://..."');
+  process.exit(1);
+}
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(MONGO_URI)
   .then(() => {
-    console.log('Connected to MongoDB Atlas');
-    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+    console.log('✅ MongoDB connected successfully');
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
+    });
   })
-  .catch(err => {
-    console.error('MongoDB connection error:', err.message);
+  .catch((err) => {
+    console.error('❌ MongoDB connection failed:', err.message);
     process.exit(1);
   });

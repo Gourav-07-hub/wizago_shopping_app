@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { UserPlus, LogIn, Mail, Lock, User, Camera, X, Wand2 } from 'lucide-react';
+import { authAPI } from './services/api';
 import './AuthPage.css';
 
 export default function AuthPage({ onAuth }) {
@@ -38,94 +39,61 @@ export default function AuthPage({ onAuth }) {
     reader.readAsDataURL(file);
   };
 
+  const handleSignup = async () => {
+    const result = await authAPI.register({
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      role,
+      shopName: role === 'vendor' ? form.shopName : null,
+      phone: '',
+    });
+
+    localStorage.setItem('wizago_token', result.token);
+    localStorage.setItem('wizago_user', JSON.stringify(result.user));
+    localStorage.setItem('wizago_role', result.user.role);
+    onAuth(result.user, result.token);
+  };
+
+  const handleLogin = async () => {
+    const result = await authAPI.login({
+      email: form.email,
+      password: form.password,
+    });
+
+    localStorage.setItem('wizago_token', result.token);
+    localStorage.setItem('wizago_user', JSON.stringify(result.user));
+    localStorage.setItem('wizago_role', result.user.role);
+    onAuth(result.user, result.token);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    if (!form.email || !form.password) {
-      setError('Email and password are required');
-      return;
-    }
-
-    if (mode === 'register') {
-      if (!form.name) { setError('Name is required'); return; }
-      if (form.password !== form.confirm) { setError('Passwords do not match'); return; }
-      if (form.password.length < 6) { setError('Password must be at least 6 characters'); return; }
-      if (role === 'vendor' && !form.shopName) { setError('Shop Name is required for Vendors'); return; }
-
-      // Save to localStorage wizago_users
-      const users = JSON.parse(localStorage.getItem('wizago_users') || '[]');
-      if (users.some(u => u.email.toLowerCase() === form.email.toLowerCase())) {
-        setError('Email already registered');
+    try {
+      if (!form.email || !form.password) {
+        setError('Email and password are required');
+        setLoading(false);
         return;
       }
 
-      const newUser = {
-        name: form.name,
-        email: form.email.toLowerCase(),
-        password: form.password,
-        role: role,
-        shopName: role === 'vendor' ? form.shopName : '',
-        avatar: avatarPreview || ''
-      };
+      if (mode === 'register') {
+        if (!form.name) { setError('Name is required'); setLoading(false); return; }
+        if (form.password !== form.confirm) { setError('Passwords do not match'); setLoading(false); return; }
+        if (form.password.length < 6) { setError('Password must be at least 6 characters'); setLoading(false); return; }
+        if (role === 'vendor' && !form.shopName) { setError('Shop Name is required for Vendors'); setLoading(false); return; }
 
-      users.push(newUser);
-      localStorage.setItem('wizago_users', JSON.stringify(users));
-
-      alert('Registration successful! You can now log in.');
-      setMode('login');
-      setForm({
-        name: '',
-        email: form.email,
-        password: '',
-        confirm: '',
-        shopName: '',
-      });
-      return;
-    }
-
-    // Login mode
-    setLoading(true);
-    setTimeout(() => {
-      try {
-        const emailLower = form.email.toLowerCase();
-        // Hardcoded accounts
-        const hardcodedUsers = [
-          { name: 'John Customer', email: 'customer@wizago.com', password: 'password', role: 'customer', shopName: '' },
-          { name: 'Jane Vendor', email: 'vendor@wizago.com', password: 'password', role: 'vendor', shopName: 'Wizago Central Shop' }
-        ];
-
-        // Retrieve registered users
-        const registeredUsers = JSON.parse(localStorage.getItem('wizago_users') || '[]');
-        const allUsers = [...hardcodedUsers, ...registeredUsers];
-
-        const user = allUsers.find(u => u.email === emailLower && u.password === form.password);
-
-        if (!user) {
-          setError('Invalid email or password');
-          setLoading(false);
-          return;
-        }
-
-        // Check if the selected role matches their actual registered role
-        if (user.role !== role) {
-          setError(`This account is registered as a ${user.role}, but you selected ${role}.`);
-          setLoading(false);
-          return;
-        }
-
-        // Successfully logged in!
-        localStorage.setItem('wizago_token', 'mock-token-xyz');
-        localStorage.setItem('wizago_user', JSON.stringify(user));
-        localStorage.setItem('wizago_role', user.role);
-
-        onAuth(user, 'mock-token-xyz');
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        await handleSignup();
+      } else {
+        await handleLogin();
       }
-    }, 500);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const switchMode = () => {
