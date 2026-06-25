@@ -1,0 +1,374 @@
+.orders-page-container {
+  min-height: 100vh;
+  background-color: #1a1a2e;
+  color: #fff;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  padding-bottom: 3rem;
+}
+
+.orders-header {
+  background-color: #111122;
+  border-bottom: 2px solid #f5c400;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.orders-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orders-logo {
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: #f5c400;
+  cursor: pointer;
+}
+
+.orders-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.orders-page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Empty Orders State */
+.empty-orders-card {
+  background-color: #1e1e38;
+  border: 2px solid #2d2d4f;
+  border-radius: 8px;
+  padding: 4rem 2rem;
+  text-align: center;
+  margin: 4rem auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon {
+  color: #f5c400;
+  margin-bottom: 1.5rem;
+}
+
+.empty-orders-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-orders-card p {
+  color: #a0aec0;
+  margin-bottom: 2rem;
+}
+
+/* Orders List */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.order-history-card {
+  background-color: #1e1e38;
+  border: 2px solid #2d2d4f;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.order-history-card:hover {
+  border-color: #f5c400;
+}
+
+.order-card-header {
+  background-color: #111122;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #2d2d4f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.order-meta-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.order-id-label {
+  color: #a0aec0;
+  font-size: 0.85rem;
+}
+
+.order-id-val {
+  color: #f5c400;
+  font-size: 0.95rem;
+}
+
+.order-date {
+  font-size: 0.85rem;
+  color: #718096;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-left: 1px solid #2d2d4f;
+  padding-left: 0.75rem;
+}
+
+.order-status-badge {
+  background-color: rgba(72, 187, 120, 0.15);
+  border: 1px solid #48bb78;
+  color: #48bb78;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Order Card Body */
+.order-card-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 1.5rem;
+  border-bottom: 1px solid #2d2d4f;
+}
+
+@media (max-width: 900px) {
+  .order-card-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Timeline Custom styles for OrderHistory */
+.timeline-tracker {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.timeline-event-row {
+  display: flex;
+  position: relative;
+  padding-bottom: 1.2rem;
+}
+
+.timeline-event-row:last-child {
+  padding-bottom: 0.2rem;
+}
+
+.timeline-event-row::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 16px;
+  bottom: 0;
+  width: 2px;
+}
+
+.timeline-event-row.line-solid::before {
+  border-left: 2px solid #f5c400;
+}
+
+.timeline-event-row.line-dashed::before {
+  border-left: 2px dashed #4a5568;
+}
+
+.timeline-event-row:last-child::before {
+  display: none;
+}
+
+.timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #1e1e38;
+  border: 2px solid #4a5568;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  margin-top: 2px;
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  color: transparent;
+}
+
+.timeline-dot.completed {
+  background-color: #f5c400;
+  border-color: #f5c400;
+  color: #1a1a2e;
+}
+
+.timeline-dot.green {
+  background-color: #48bb78;
+  border-color: #48bb78;
+}
+
+.timeline-dot.blue {
+  background-color: #4299e1;
+  border-color: #4299e1;
+}
+
+.timeline-dot.yellow {
+  background-color: #f6ad55;
+  border-color: #f6ad55;
+}
+
+.timeline-dot.red {
+  background-color: #e53e3e;
+  border-color: #e53e3e;
+}
+
+.timeline-content-area {
+  margin-left: 0.75rem;
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.timeline-event-title {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.timeline-event-desc {
+  font-size: 0.7rem;
+  color: #a0aec0;
+  margin-top: 0.1rem;
+}
+
+.timeline-event-time {
+  font-size: 0.65rem;
+  color: #cbd5e0;
+  white-space: nowrap;
+}
+
+.body-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #a0aec0;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.order-items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-item-row {
+  display: flex;
+  font-size: 0.85rem;
+  gap: 0.5rem;
+}
+
+.item-qty {
+  color: #f5c400;
+  font-weight: 700;
+}
+
+.item-name {
+  flex: 1;
+  color: #e2e8f0;
+}
+
+.item-price {
+  font-weight: 600;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #a0aec0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.info-val {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Order Card Footer */
+.order-card-footer {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255,255,255,0.01);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pricing-breakdown {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #a0aec0;
+  flex-wrap: wrap;
+}
+
+.pricing-breakdown .free-delivery {
+  color: #48bb78;
+  font-weight: 700;
+}
+
+.order-total-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.order-total-price span {
+  color: #cbd5e0;
+}
+
+.order-total-price strong {
+  font-size: 1.3rem;
+  color: #f5c400;
+  font-weight: 800;
+}

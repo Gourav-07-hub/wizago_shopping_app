@@ -1,0 +1,176 @@
+import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import LeaveShopModal from './components/vendor/LeaveShopModal';
+import AuthPage from './AuthPage';
+import PosPage from './PosPage';
+import HomePage from './HomePage';
+import CartPage from './CartPage';
+import CheckoutPage from './CheckoutPage';
+import VendorDashboard from './VendorDashboard';
+import OrderHistoryPage from './OrderHistoryPage';
+import VendorOrdersPage from './pages/VendorOrdersPage';
+
+// Protected Route for Customers (requires login)
+function CustomerRoute({ user, children }) {
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+// Protected Route for Vendors (requires login + role = vendor)
+function VendorRoute({ user, children }) {
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  const role = localStorage.getItem('wizago_role') || user.role;
+  if (role === 'customer') {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
+// Route for Login (redirects if already logged in)
+function AuthRoute({ user, children }) {
+  if (user) {
+    const role = localStorage.getItem('wizago_role') || user.role;
+    if (role === 'vendor') {
+      return <Navigate to="/vendor/dashboard" replace />;
+    }
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
+function App() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('wizago_user'));
+    } catch {
+      return null;
+    }
+  });
+
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [pendingLeaveAction, setPendingLeaveAction] = useState(null); // 'logout' or URL string
+
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      const anchor = e.target.closest('a');
+      if (anchor && anchor.href) {
+        try {
+          const url = new URL(anchor.href);
+          if (url.origin !== window.location.origin) {
+            e.preventDefault();
+            setPendingLeaveAction(anchor.href);
+            setShowLeaveModal(true);
+          }
+        } catch {
+          // Ignored
+        }
+      }
+    };
+    document.addEventListener('click', handleGlobalClick);
+    return () => document.removeEventListener('click', handleGlobalClick);
+  }, []);
+
+  const handleAuth = (userData) => {
+    setUser(userData);
+    const role = localStorage.getItem('wizago_role') || userData.role;
+    if (role === 'vendor') {
+      navigate('/vendor/dashboard');
+    } else {
+      navigate('/');
+    }
+  };
+
+  const triggerLogout = () => {
+    setPendingLeaveAction('logout');
+    setShowLeaveModal(true);
+  };
+
+  const confirmLeave = () => {
+    setShowLeaveModal(false);
+    
+    // Save cart data to localStorage BEFORE logout executes
+    const cartData = localStorage.getItem('wizago_cart');
+    if (cartData) {
+      localStorage.setItem('wizago_cart', cartData);
+    }
+
+    if (pendingLeaveAction === 'logout') {
+      localStorage.removeItem('wizago_token');
+      localStorage.removeItem('wizago_user');
+      localStorage.removeItem('wizago_role');
+      setUser(null);
+      navigate('/login');
+    } else if (typeof pendingLeaveAction === 'string') {
+      window.location.href = pendingLeaveAction;
+    }
+  };
+
+  return (
+    <>
+      <Routes>
+        {/* Public/Auth Routes */}
+        <Route path="/login" element={
+          <AuthRoute user={user}>
+            <AuthPage onAuth={handleAuth} />
+          </AuthRoute>
+        } />
+
+        {/* Customer Routes (Protected) */}
+        <Route path="/" element={
+          <CustomerRoute user={user}>
+            <HomePage user={user} onLogout={triggerLogout} />
+          </CustomerRoute>
+        } />
+        <Route path="/cart" element={
+          <CustomerRoute user={user}>
+            <CartPage />
+          </CustomerRoute>
+        } />
+        <Route path="/checkout" element={
+          <CustomerRoute user={user}>
+            <CheckoutPage />
+          </CustomerRoute>
+        } />
+        <Route path="/orders" element={
+          <CustomerRoute user={user}>
+            <OrderHistoryPage />
+          </CustomerRoute>
+        } />
+
+        {/* Vendor Routes (Protected) */}
+        <Route path="/vendor/dashboard" element={
+          <VendorRoute user={user}>
+            <VendorDashboard onLogout={triggerLogout} />
+          </VendorRoute>
+        } />
+        <Route path="/vendor/orders" element={
+          <VendorRoute user={user}>
+            <VendorOrdersPage user={user} onLogout={triggerLogout} />
+          </VendorRoute>
+        } />
+        <Route path="/vendor/pos" element={
+          <VendorRoute user={user}>
+            <PosPage user={user} onLogout={triggerLogout} />
+          </VendorRoute>
+        } />
+
+        {/* Fallback redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      <LeaveShopModal
+        isOpen={showLeaveModal}
+        onClose={() => setShowLeaveModal(false)}
+        onConfirm={confirmLeave}
+      />
+    </>
+  );
+}
+
+export default App;
+
