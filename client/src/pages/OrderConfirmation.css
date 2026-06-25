@@ -1,0 +1,302 @@
+/* ============================================================
+   ORDER CONFIRMATION PAGE — DARK HORROR SPELL CAST THEME
+   ============================================================ */
+
+.confirmation-container {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0010 40%, #0a0a0f 100%);
+  color: var(--color-ghost);
+  font-family: var(--font-body);
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.confirmation-card {
+  background: rgba(15, 15, 26, 0.95);
+  border: 1px solid rgba(245, 196, 0, 0.3);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 650px;
+  padding: 2.5rem;
+  box-shadow:
+    0 0 60px rgba(0,0,0,0.8),
+    0 0 30px rgba(245, 196, 0, 0.1),
+    var(--glow-red);
+  backdrop-filter: blur(20px);
+  animation: portalOpen 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1) both;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gold top accent line */
+.confirmation-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), var(--color-crimson), var(--color-gold), transparent);
+  box-shadow: 0 0 15px rgba(245,196,0,0.5);
+}
+
+.confirmation-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.confirmation-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.75rem;
+  display: inline-block;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s both;
+  filter: drop-shadow(0 0 20px rgba(245,196,0,0.6));
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.2) rotate(-20deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.confirmation-title {
+  font-family: var(--font-horror);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-crimson));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  animation: typing 1.5s steps(20) 0.5s both, blink 0.7s step-end 0.5s infinite;
+  overflow: hidden;
+  border-right: 3px solid var(--color-crimson);
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.confirmation-subtitle {
+  color: var(--color-mist);
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+  font-family: var(--font-body);
+}
+
+/* ── Info Box ────────────────────────────────────────────────*/
+.info-box {
+  background: rgba(10, 10, 20, 0.8);
+  border: 1px solid var(--border-dark);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  border-bottom: 1px dashed var(--border-dark);
+  padding-bottom: 0.6rem;
+}
+
+.info-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.info-label { color: var(--color-mist); font-weight: 600; font-family: var(--font-body); }
+.info-value { font-weight: 700; color: var(--color-ghost); }
+
+.payment-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--font-horror);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.payment-badge.paid {
+  background: rgba(0, 180, 50, 0.15);
+  border: 1px solid rgba(0,180,50,0.4);
+  color: #90ee90;
+  box-shadow: 0 0 10px rgba(0,180,50,0.2);
+}
+
+.payment-badge.unpaid {
+  background: rgba(245,196,0,0.1);
+  border: 1px solid rgba(245,196,0,0.3);
+  color: var(--color-gold);
+  box-shadow: 0 0 10px rgba(245,196,0,0.15);
+}
+
+/* ── Summary Section ────────────────────────────────────────*/
+.summary-section { margin-bottom: 2rem; }
+
+.summary-section-title {
+  font-family: var(--font-horror);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-dark);
+  padding-bottom: 0.4rem;
+  letter-spacing: 2px;
+}
+
+.items-table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+
+.items-table th {
+  text-align: left;
+  color: var(--color-mist);
+  font-family: var(--font-horror);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.items-table td {
+  padding: 0.75rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-dark);
+  color: var(--color-ghost);
+}
+
+.item-qty {
+  color: var(--color-gold);
+  font-weight: 700;
+  margin-right: 0.5rem;
+  font-family: var(--font-mono);
+}
+
+.totals-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-dark);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.total-row-item {
+  display: flex;
+  justify-content: space-between;
+  width: 250px;
+  font-size: 0.85rem;
+  color: var(--color-mist);
+}
+
+.total-row-item.grand-total {
+  font-family: var(--font-horror);
+  font-size: 1.3rem;
+  color: var(--color-gold);
+  font-weight: 700;
+  margin-top: 0.25rem;
+  text-shadow: 0 0 15px rgba(245,196,0,0.4);
+}
+
+.address-box {
+  background: rgba(10, 10, 20, 0.7);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-mist);
+  font-family: var(--font-body);
+}
+
+/* ── Actions ─────────────────────────────────────────────────*/
+.actions-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 0.85rem 1.75rem;
+  font-family: var(--font-horror);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  gap: 0.5rem;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--color-blood), var(--color-crimson));
+  color: white;
+  border: 1px solid var(--color-crimson);
+  box-shadow: 0 4px 20px rgba(139,0,0,0.4);
+}
+
+.action-btn.primary:hover {
+  box-shadow: var(--glow-crimson);
+  transform: translateY(-2px);
+}
+
+.action-btn.secondary {
+  background: transparent;
+  color: var(--color-gold);
+  border: 1px solid rgba(245,196,0,0.4);
+}
+
+.action-btn.secondary:hover {
+  background: rgba(245,196,0,0.08);
+  box-shadow: var(--glow-gold);
+  transform: translateY(-2px);
+}
+
+/* ── Not Found ──────────────────────────────────────────────*/
+.not-found-container {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-ghost);
+}
+
+.not-found-title {
+  font-family: var(--font-horror);
+  color: var(--color-crimson);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-shadow: var(--glow-red);
+}
+
+/* ── Particle Burst (Gold stars on confirm) ──────────────────*/
+.particle-burst-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.particle-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1rem;
+  animation: particleBurst 1s ease-out var(--delay, 0s) both;
+}

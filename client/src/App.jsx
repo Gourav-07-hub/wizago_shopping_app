@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LeaveShopModal from './components/vendor/LeaveShopModal';
+import HorrorBackground from './components/effects/HorrorBackground';
 import AuthPage from './AuthPage';
 import PosPage from './PosPage';
 import HomePage from './HomePage';
@@ -9,6 +10,7 @@ import CheckoutPage from './CheckoutPage';
 import VendorDashboard from './VendorDashboard';
 import OrderHistoryPage from './OrderHistoryPage';
 import VendorOrdersPage from './pages/VendorOrdersPage';
+import OrderConfirmation from './pages/OrderConfirmation';
 
 // Protected Route for Customers (requires login)
 function CustomerRoute({ user, children }) {
@@ -112,6 +114,7 @@ function App() {
 
   return (
     <>
+      <HorrorBackground />
       <Routes>
         {/* Public/Auth Routes */}
         <Route path="/login" element={
@@ -139,6 +142,11 @@ function App() {
         <Route path="/orders" element={
           <CustomerRoute user={user}>
             <OrderHistoryPage />
+          </CustomerRoute>
+        } />
+        <Route path="/orders/:orderId" element={
+          <CustomerRoute user={user}>
+            <OrderConfirmation />
           </CustomerRoute>
         } />
 

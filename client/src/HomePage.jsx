@@ -8,45 +8,51 @@ import {
   Trash2
 } from 'lucide-react';
 import SearchBar from './SearchBar';
-
-// ---- PRODUCT CATALOG ----
-export const PRODUCTS = [
-  { id: 1, name: 'Elder Wood Wand', category: 'Wands', price: 59.99, originalPrice: 79.99, rating: 4.5, discount: 25, image: null },
-  { id: 2, name: 'Phoenix Feather Wand', category: 'Wands', price: 89.99, originalPrice: 119.99, rating: 4.8, discount: 25, image: null },
-  { id: 3, name: 'Unicorn Hair Wand', category: 'Wands', price: 74.99, originalPrice: 89.99, rating: 4.6, discount: 17, image: null },
-  { id: 4, name: 'Dragon Heartstring Wand', category: 'Wands', price: 99.99, originalPrice: 129.99, rating: 4.9, discount: 23, image: null },
-  { id: 5, name: 'Self-Stirring Pewter Cart', category: 'Carts', price: 120.00, originalPrice: 150.00, rating: 4.3, discount: 20, image: null },
-  { id: 6, name: 'Brass Pocket Cart', category: 'Carts', price: 45.00, originalPrice: 55.00, rating: 4.1, discount: 18, image: null },
-  { id: 7, name: 'Iron Brewing Cart XL', category: 'Carts', price: 199.99, originalPrice: 249.99, rating: 4.7, discount: 20, image: null },
-  { id: 8, name: 'Golden Stirring Cart', category: 'Carts', price: 159.99, originalPrice: 189.99, rating: 4.4, discount: 16, image: null },
-  { id: 9, name: 'Anti-Gravity Floating Inkwell', category: 'Inkwells', price: 29.99, originalPrice: 39.99, rating: 4.2, discount: 25, image: null },
-  { id: 10, name: 'Silver Raven Inkwell Set', category: 'Inkwells', price: 49.99, originalPrice: 64.99, rating: 4.5, discount: 23, image: null },
-  { id: 11, name: 'Crystal Clear Inkwell', category: 'Inkwells', price: 19.99, originalPrice: 24.99, rating: 3.8, discount: 20, image: null },
-  { id: 12, name: 'Enchanted Self-Filling Inkwell', category: 'Inkwells', price: 39.99, originalPrice: 49.99, rating: 4.6, discount: 20, image: null },
-  { id: 13, name: 'Midnight Velvet Wizard Cloak', category: 'Cloaks', price: 95.00, originalPrice: 125.00, rating: 4.7, discount: 24, image: null },
-  { id: 14, name: 'Crimson Sorcerer Robe', category: 'Cloaks', price: 129.99, originalPrice: 169.99, rating: 4.5, discount: 24, image: null },
-  { id: 15, name: 'Invisibility Shawl', category: 'Cloaks', price: 199.99, originalPrice: 249.99, rating: 4.9, discount: 20, image: null },
-  { id: 16, name: 'Silver Star Travel Cloak', category: 'Cloaks', price: 79.99, originalPrice: 99.99, rating: 4.3, discount: 20, image: null },
-  { id: 17, name: 'Chrono-Watch Timepiece', category: 'Timepieces', price: 249.99, originalPrice: 299.99, rating: 4.8, discount: 17, image: null },
-  { id: 18, name: 'Sand Timer of Ages', category: 'Timepieces', price: 89.99, originalPrice: 119.99, rating: 4.4, discount: 25, image: null },
-  { id: 19, name: 'Moon Phase Pocket Watch', category: 'Timepieces', price: 149.99, originalPrice: 189.99, rating: 4.6, discount: 21, image: null },
-  { id: 20, name: 'Crystal Hourglass', category: 'Timepieces', price: 59.99, originalPrice: 74.99, rating: 4.2, discount: 20, image: null },
-  { id: 21, name: 'Glow-in-the-dark Spark Wand', category: 'Magic Tech', price: 45.00, originalPrice: 55.00, rating: 4.0, discount: 18, image: null },
-  { id: 22, name: 'Auto-Quill Enchanted Pen', category: 'Magic Tech', price: 34.99, originalPrice: 44.99, rating: 4.3, discount: 22, image: null },
-  { id: 23, name: 'Floating Orb Lantern', category: 'Magic Tech', price: 69.99, originalPrice: 89.99, rating: 4.5, discount: 22, image: null },
-  { id: 24, name: 'Talking Sorting Hat', category: 'Magic Tech', price: 149.99, originalPrice: 179.99, rating: 4.7, discount: 17, image: null },
-  { id: 25, name: 'Premium Gift Box - Wand Set', category: 'Gift Sets', price: 129.99, originalPrice: 169.99, rating: 4.8, discount: 24, image: null },
-  { id: 26, name: 'Starter Wizard Kit', category: 'Gift Sets', price: 79.99, originalPrice: 99.99, rating: 4.4, discount: 20, image: null },
-  { id: 27, name: 'Luxury Potion Master Set', category: 'Gift Sets', price: 199.99, originalPrice: 259.99, rating: 4.9, discount: 23, image: null },
-  { id: 28, name: 'Spellbook & Artifact Collection', category: 'Gift Sets', price: 159.99, originalPrice: 199.99, rating: 4.6, discount: 20, image: null },
-];
+import { PRODUCTS } from './data/products';
+import DeliveryBadge from './components/DeliveryBadge';
+import PincodeChecker from './components/PincodeChecker';
 
 const CATEGORIES = ['All', 'Wands', 'Carts', 'Inkwells', 'Cloaks', 'Timepieces', 'Magic Tech', 'Gift Sets'];
 
 const HERO_SLIDES = [
-  { id: 1, bg: '#1a1a2e', headline: 'New Arrivals — Enchanted Wands', subtext: 'Discover wands crafted from rare magical cores', cta: 'Shop Now', color: '#f5c400' },
-  { id: 2, bg: '#2d1b3d', headline: '50% Off — Cart Collection', subtext: 'Brew potions in style with our premium carts', cta: 'Grab the Deal', color: '#e94560' },
-  { id: 3, bg: '#0f3460', headline: 'Premium Gift Boxes — Free Shipping', subtext: 'Perfect for every witch and wizard in your circle', cta: 'Explore', color: '#16c79a' },
+  {
+    id: 1,
+    bg: 'linear-gradient(135deg, #0a0a0f 0%, #1a0a0a 50%, #0f0005 100%)',
+    headline: '🩸 BLOOD MOON SALE',
+    subtext: 'Enchanted artifacts forged in darkness',
+    cta: 'SHOP NOW →',
+    ctaClass: 'cta-crimson',
+    floatEl: <span className="hero-float-elem moon-float" aria-hidden="true">🌕</span>,
+  },
+  {
+    id: 2,
+    bg: 'linear-gradient(135deg, #0a0a0f 0%, #0a001a 50%, #120010 100%)',
+    headline: '⚡ FORBIDDEN COLLECTION',
+    subtext: '50% off — Cursed items, limited stock',
+    cta: 'GRAB THE DEAL',
+    ctaClass: 'cta-purple',
+    floatEl: (
+      <>
+        <span className="hero-float-elem sparkle-float" style={{ top:'15%', left:'10%', animationDuration:'3s' }} aria-hidden="true">✨</span>
+        <span className="hero-float-elem sparkle-float" style={{ top:'25%', right:'12%', animationDuration:'4s', animationDelay:'1s' }} aria-hidden="true">⚗️</span>
+        <span className="hero-float-elem sparkle-float" style={{ bottom:'20%', left:'8%', animationDuration:'5s', animationDelay:'0.5s' }} aria-hidden="true">✨</span>
+      </>
+    ),
+  },
+  {
+    id: 3,
+    bg: 'linear-gradient(135deg, #0a0a0f 0%, #001a1a 50%, #000f12 100%)',
+    headline: '🌙 MIDNIGHT DISPATCH',
+    subtext: 'Order before midnight, arrive by dawn',
+    cta: 'EXPLORE',
+    ctaClass: 'cta-gold',
+    floatEl: (
+      <>
+        <span className="hero-float-elem bat-fly" style={{ top:'30%', animationDuration:'8s' }} aria-hidden="true">🦇</span>
+        <span className="hero-float-elem bat-fly" style={{ top:'55%', animationDuration:'11s', animationDelay:'3s' }} aria-hidden="true">🦇</span>
+      </>
+    ),
+  },
 ];
 
 const DEAL_PRODUCTS = PRODUCTS.filter(p => p.discount >= 20).slice(0, 4);
@@ -249,17 +255,18 @@ export default function HomePage({ user, onLogout }) {
       </header>
 
       {/* HERO BANNER */}
-      <section className="hero-banner">
+      <section className="hero-banner" aria-label="Promotional banners">
         {HERO_SLIDES.map((slide, index) => (
           <div
             key={slide.id}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
             style={{ background: slide.bg }}
           >
+            {slide.floatEl}
             <div className="hero-slide-content">
               <h2>{slide.headline}</h2>
               <p>{slide.subtext}</p>
-              <button className="hero-cta" style={{ background: slide.color }}>
+              <button className={`hero-cta ${slide.ctaClass}`}>
                 {slide.cta}
               </button>
             </div>
@@ -271,6 +278,7 @@ export default function HomePage({ user, onLogout }) {
               key={index}
               className={`hero-dot ${index === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(index)}
+              aria-label={`Slide ${index + 1}`}
             />
           ))}
         </div>
@@ -317,7 +325,21 @@ export default function HomePage({ user, onLogout }) {
             <div key={product.id} className="deal-card">
               <div className="deal-card-badge">-{product.discount}%</div>
               <div className="product-card-image deal-image">
-                {product.name.charAt(0)}
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      if (e.target.nextSibling) e.target.nextSibling.style.display = "flex";
+                    }}
+                  />
+                ) : (
+                  <div className="img-fallback" style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "8px", background: "linear-gradient(135deg, #0f0f1a, #1a0a1a)" }}>
+                    {product.name.charAt(0)}
+                  </div>
+                )}
               </div>
               <h4>{product.name}</h4>
               <div className="deal-prices">
@@ -356,7 +378,25 @@ export default function HomePage({ user, onLogout }) {
                   <span className="product-discount-badge">-{product.discount}%</span>
                 )}
                 <div className="product-card-image">
-                  {product.name.charAt(0)}
+                  {product.image ? (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "8px" }}
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        const fallback = e.target.parentElement?.querySelector('.img-fallback');
+                        if (fallback) fallback.style.display = "flex";
+                      }}
+                    />
+                  ) : null}
+                  <div className="img-fallback" style={{
+                    width: "100%", height: "200px", display: product.image ? "none" : "flex",
+                    alignItems: "center", justifyContent: "center",
+                    background: "linear-gradient(135deg, #0f0f1a, #1a0a1a)", borderRadius: "8px"
+                  }}>
+                    {product.name.charAt(0)}
+                  </div>
                 </div>
                 <div className="product-card-body">
                   <span className="product-category-badge">{product.category}</span>
@@ -377,6 +417,9 @@ export default function HomePage({ user, onLogout }) {
                     {product.originalPrice > product.price && (
                       <span className="product-original-price">₹{product.originalPrice.toFixed(2)}</span>
                     )}
+                  </div>
+                  <div style={{ margin: '0.25rem 0' }}>
+                    <DeliveryBadge product={product} cartTotal={cart.reduce((a, i) => a + i.price * i.qty, 0)} />
                   </div>
                   <button
                     className="neo-btn neo-btn-sm primary add-cart-btn"
@@ -406,7 +449,25 @@ export default function HomePage({ user, onLogout }) {
             </button>
             <div className="quick-view-content">
               <div className="quick-view-image">
-                {quickView.name.charAt(0)}
+                {quickView.image ? (
+                  <img
+                    src={quickView.image}
+                    alt={quickView.name}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      const fb = e.target.parentElement?.querySelector('.qv-fallback');
+                      if (fb) fb.style.display = "flex";
+                    }}
+                  />
+                ) : null}
+                <div className="qv-fallback" style={{
+                  width: "100%", height: "100%", display: quickView.image ? "none" : "flex",
+                  alignItems: "center", justifyContent: "center",
+                  background: "linear-gradient(135deg, #0f0f1a, #1a0a1a)", borderRadius: "8px"
+                }}>
+                  {quickView.name.charAt(0)}
+                </div>
               </div>
               <div className="quick-view-details">
                 <span className="product-category-badge">{quickView.category}</span>
@@ -450,6 +511,9 @@ export default function HomePage({ user, onLogout }) {
                   <button className="neo-btn success" onClick={() => { addToCart(quickView, quickViewQty); navigate('/pos'); }}>
                     Buy Now
                   </button>
+                </div>
+                <div style={{ marginTop: '1rem', borderTop: '1px solid #2d2d4f', paddingTop: '1rem' }}>
+                  <PincodeChecker compact />
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext } from 'react';
 import { Search, Clock, X } from 'lucide-react';
-import { PRODUCTS } from './HomePage';
+import { PRODUCTS } from './data/products';
 import { CartContext } from './context/CartContext';
 
 const HISTORY_KEY = 'wizago_search_history';

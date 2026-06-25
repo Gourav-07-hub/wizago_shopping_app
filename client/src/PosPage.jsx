@@ -955,7 +955,8 @@ function EditProfileModal({ user, onClose, onSave }) {
         if (email !== user.email) body.email = email;
         if (newPassword) { body.currentPassword = currentPassword; body.newPassword = newPassword; }
         
-        const res = await fetch('http://localhost:3001/api/auth/profile', {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${API_URL}/api/auth/profile`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify(body),

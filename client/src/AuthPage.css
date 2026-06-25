@@ -1,6 +1,6 @@
-/* ============================================
-   Auth Page — Wizago Yellow Branding Theme
-   ============================================ */
+/* ============================================================
+   AUTH PAGE — DARK HORROR PORTAL THEME
+   ============================================================ */
 
 .auth-page {
   min-height: 100vh;
@@ -8,48 +8,97 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #1a1a2e;
+  background: radial-gradient(
+    ellipse at center,
+    #1a0a2e 0%,
+    #0a0010 40%,
+    #0a0a0f 100%
+  );
   position: relative;
   overflow: hidden;
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   padding: 2rem 1rem;
   gap: 1.5rem;
+  z-index: 1;
+}
+
+/* Radial glow behind the card */
+.auth-page::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(107,33,168,0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .auth-brand-header {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #f5c400;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.75rem;
+  font-family: var(--font-horror);
+  font-weight: 700;
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #f5c400, #dc143c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: logoPulse 3s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+/* Rotating magic circle behind the login card */
+.auth-page .magic-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
 }
 
 .auth-card {
-  background: #ffffff;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(15, 15, 26, 0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 2.5rem;
   width: 100%;
   max-width: 420px;
-  padding: 2.5rem;
   position: relative;
-  border-radius: 8px;
-  animation: cardFadeIn 0.3s ease-out;
+  z-index: 2;
+  box-shadow:
+    0 0 60px rgba(139, 0, 0, 0.15),
+    0 0 120px rgba(107, 33, 168, 0.1),
+    inset 0 0 60px rgba(0, 0, 0, 0.3);
+  animation: portalOpen 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
-@keyframes cardFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes portalOpen {
+  0%   { opacity: 0; transform: scale(0.7) rotateY(15deg); }
+  100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+}
+
+/* Top glowing line on card */
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-crimson), transparent);
+  box-shadow: 0 0 10px rgba(220,20,60,0.6);
 }
 
 .auth-brand {
   text-align: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1.25rem;
-  border-bottom: 2px solid #f5c400;
+  border-bottom: 1px solid var(--border-dark);
 }
 
 .auth-logo-wizago {
@@ -57,26 +106,36 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: #f5c400;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.3rem;
+  font-family: var(--font-horror);
+  font-weight: 700;
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #f5c400, #dc143c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.75rem;
 }
 
 .auth-title {
-  font-size: 1.25rem;
+  font-family: var(--font-horror);
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  background: linear-gradient(135deg, #f5c400, #dc143c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-top: 0.25rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
 .auth-sub {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--color-mist);
   margin-top: 0.35rem;
+  font-family: var(--font-body);
 }
 
 .auth-form {
@@ -85,67 +144,70 @@
   gap: 1.25rem;
 }
 
-.auth-form .form-group {
-  margin-bottom: 0;
-}
+.auth-form .form-group { margin-bottom: 0; }
 
 .auth-form .form-group label {
-  font-size: 0.75rem;
+  font-family: var(--font-horror);
+  font-size: 0.65rem;
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  color: var(--text-secondary);
+  color: var(--color-mist);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
 }
 
 .auth-form .neo-input {
-  background: #fff;
-  border: 1px solid #d4d5d9;
-  color: var(--text-primary);
-  border-radius: 6px;
-  padding: 0.75rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(10, 10, 15, 0.8);
+  border: 1px solid rgba(139, 0, 0, 0.3);
+  color: var(--color-ghost);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
 }
 
-.auth-form .neo-input::placeholder {
-  color: var(--text-muted);
-}
+.auth-form .neo-input::placeholder { color: var(--color-mist); opacity: 0.6; }
 
 .auth-form .neo-input:focus {
-  background: #fff;
-  border-color: #f5c400;
-  box-shadow: 0 0 0 2px rgba(245, 196, 0, 0.2);
+  border-color: var(--color-crimson);
+  box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
   outline: none;
+  background: rgba(15, 10, 15, 0.9);
 }
 
-.wizago-btn {
-  background: #f5c400 !important;
-  color: #1a1a2e !important;
-  border: none !important;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 0.85rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(245, 196, 0, 0.3) !important;
-  text-transform: uppercase;
-  transition: all 0.2s ease !important;
+/* Sign In / Register button */
+.wizago-btn, .auth-submit {
+  background: linear-gradient(135deg, var(--color-blood), var(--color-crimson)) !important;
+  color: white !important;
+  border: 1px solid var(--color-crimson) !important;
+  font-family: var(--font-horror) !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  font-size: 0.85rem !important;
+  padding: 0.9rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(139, 0, 0, 0.4) !important;
+  text-transform: uppercase !important;
+  transition: all 0.3s ease !important;
+  width: 100%;
 }
 
-.wizago-btn:hover:not(:disabled) {
-  background: #e5af00 !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(245, 196, 0, 0.4) !important;
+.wizago-btn:hover:not(:disabled), .auth-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-crimson), #ff0040) !important;
+  box-shadow: 0 0 30px rgba(220, 20, 60, 0.6) !important;
+  transform: translateY(-2px) !important;
 }
 
-.wizago-btn:active:not(:disabled) {
+.wizago-btn:active:not(:disabled), .auth-submit:active:not(:disabled) {
   transform: scale(0.98) !important;
 }
 
-.wizago-btn:disabled {
-  opacity: 0.6;
+.wizago-btn:disabled, .auth-submit:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -154,95 +216,77 @@
   align-items: center;
   gap: 0.75rem;
   margin: 1rem 0;
-  color: var(--text-muted);
+  color: var(--color-mist);
   font-size: 0.75rem;
   text-transform: uppercase;
 }
 
-.auth-divider::before,
-.auth-divider::after {
+.auth-divider::before, .auth-divider::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border-color);
-}
-
-.google-signin-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  background: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  transition: all 0.2s ease;
-}
-
-.google-signin-btn:hover {
-  background: #f8f8f8;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: var(--border-dark);
 }
 
 .auth-error {
-  background: #ffebee;
-  border: 1px solid #ffcdd2;
+  background: rgba(40, 5, 5, 0.9);
+  border: 1px solid rgba(220, 20, 60, 0.4);
+  border-left: 3px solid var(--color-crimson);
   padding: 0.75rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #d32f2f;
+  color: #ffaaaa;
   border-radius: 6px;
+  backdrop-filter: blur(10px);
 }
 
 .auth-success {
-  background: #e8f5e9;
-  border: 1px solid #c8e6c9;
+  background: rgba(10, 40, 15, 0.9);
+  border: 1px solid rgba(0, 180, 50, 0.4);
+  border-left: 3px solid #00b432;
   padding: 0.75rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #2e7d32;
+  color: #90ee90;
   border-radius: 6px;
 }
 
 .auth-footer {
   text-align: center;
   margin-top: 1.25rem;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  color: var(--color-mist);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.4rem;
   padding-top: 1rem;
+  border-top: 1px solid var(--border-dark);
 }
 
 .auth-switch {
   background: none;
   border: none;
-  color: #f5c400;
+  color: var(--color-gold);
   font-weight: 700;
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-family: var(--font-horror);
+  font-size: 0.8rem;
   cursor: pointer;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .auth-switch:hover {
-  color: #e5af00;
-  text-decoration: underline;
+  color: var(--color-crimson);
+  text-shadow: var(--glow-red);
 }
 
 .auth-avatar-section {
@@ -251,73 +295,56 @@
   align-items: center;
   gap: 0.75rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-dark);
 }
 
 .auth-avatar-circle {
-  width: 80px;
-  height: 80px;
-  border: 2px dashed #d4d5d9;
-  background: #f5f5f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 80px; height: 80px;
+  border: 2px dashed rgba(139,0,0,0.4);
+  background: rgba(10,10,15,0.8);
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
-  color: var(--text-muted);
+  color: var(--color-mist);
   border-radius: 50%;
 }
 
 .auth-avatar-circle:hover {
-  border-color: #f5c400;
-  color: #f5c400;
-  background: #fff;
+  border-color: var(--color-crimson);
+  color: var(--color-crimson);
+  box-shadow: var(--glow-red);
 }
 
-.auth-avatar-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.auth-avatar-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
+.auth-avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+.auth-avatar-label { font-size: 0.75rem; font-weight: 600; color: var(--color-mist); }
 
 .auth-avatar-spinner {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .auth-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(26, 26, 46, 0.3);
-  border-top-color: #1a1a2e;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(220, 20, 60, 0.3);
+  border-top-color: var(--color-crimson);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   display: inline-block;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 480px) {
-  .auth-card {
-    padding: 1.5rem;
-  }
+  .auth-card { padding: 1.5rem; }
 }
 
-/* Role Selector Styling */
+/* ── Role Selector ──────────────────────────────────────────*/
 .role-selector-container {
   display: flex;
   gap: 0.75rem;
@@ -326,13 +353,13 @@
 
 .role-card {
   flex: 1;
-  border: 2px solid #d4d5d9;
-  border-radius: 8px;
-  padding: 0.75rem;
+  border: 2px solid rgba(139, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 0.85rem;
   text-align: center;
   cursor: pointer;
-  background: #f8f9fa;
-  transition: all 0.2s ease;
+  background: rgba(26, 26, 46, 0.8);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -341,31 +368,26 @@
 }
 
 .role-card:hover {
-  background: #f1f3f5;
-  border-color: #ced4da;
+  background: rgba(26, 26, 46, 1);
+  border-color: rgba(139, 0, 0, 0.4);
 }
 
 .role-card.selected {
-  border-color: #f5c400;
-  background: #fffbeb;
-  box-shadow: 0 0 0 1px #f5c400;
+  border-color: var(--color-crimson);
+  background: rgba(139, 0, 0, 0.15);
+  box-shadow: var(--glow-red);
 }
 
-.role-icon {
-  font-size: 1.3rem;
-  margin-bottom: 0.25rem;
-}
+.role-icon { font-size: 1.5rem; margin-bottom: 0.35rem; }
 
 .role-title {
+  font-family: var(--font-horror);
   font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--color-ghost);
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.role-desc {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  line-height: 1.3;
-}
-
+.role-desc { font-size: 0.7rem; color: var(--color-mist); line-height: 1.3; }

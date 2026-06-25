@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Clock, MapPin, CreditCard, CheckCircle, X, FileText } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, CreditCard, X, FileText } from 'lucide-react';
 import './OrderHistoryPage.css';
 
 // Reusable vertical timeline component for customer history card
@@ -295,7 +295,7 @@ export default function OrderHistoryPage() {
     try {
       const savedOrders = JSON.parse(localStorage.getItem('wizago_orders') || '[]');
       const normalized = savedOrders.map(normalizeOrder);
-      setOrders(normalized);
+      setOrders(normalized); // eslint-disable-line react-hooks/set-state-in-effect
     } catch (err) {
       console.error('Failed to load orders:', err);
     }
@@ -372,11 +372,13 @@ export default function OrderHistoryPage() {
                       <span className="order-date"><Clock size={12} /> {displayDate}</span>
                     </div>
                     <div className="order-status-badge" style={{
-                      backgroundColor: order.status === 'delivered' ? 'rgba(72, 187, 120, 0.15)' : order.priority === 'urgent' ? 'rgba(229, 62, 62, 0.15)' : 'rgba(245, 196, 0, 0.15)',
-                      color: order.status === 'delivered' ? '#48bb78' : order.priority === 'urgent' ? '#e53e3e' : '#f5c400',
-                      borderColor: order.status === 'delivered' ? '#48bb78' : order.priority === 'urgent' ? '#e53e3e' : '#f5c400'
+                      backgroundColor: order.deliveryStatus === 'delivered' ? 'rgba(72, 187, 120, 0.15)' : order.deliveryStatus === 'out_for_delivery' ? 'rgba(237, 137, 54, 0.15)' : order.deliveryStatus === 'packed' ? 'rgba(66, 153, 225, 0.15)' : order.status === 'cancelled' ? 'rgba(229, 62, 62, 0.15)' : 'rgba(245, 196, 0, 0.15)',
+                      color: order.deliveryStatus === 'delivered' ? '#48bb78' : order.deliveryStatus === 'out_for_delivery' ? '#ed8936' : order.deliveryStatus === 'packed' ? '#4299e1' : order.status === 'cancelled' ? '#e53e3e' : '#f5c400',
+                      borderColor: order.deliveryStatus === 'delivered' ? '#48bb78' : order.deliveryStatus === 'out_for_delivery' ? '#ed8936' : order.deliveryStatus === 'packed' ? '#4299e1' : order.status === 'cancelled' ? '#e53e3e' : '#f5c400'
                     }}>
-                      <CheckCircle size={14} /> <span style={{ textTransform: 'uppercase' }}>{order.status || 'pending'}</span>
+                      {order.deliveryStatus === 'delivered' ? '✅' : order.deliveryStatus === 'out_for_delivery' ? '🟠' : order.deliveryStatus === 'packed' ? '🔵' : order.status === 'cancelled' ? '🔴' : '🟡'} <span style={{ textTransform: 'uppercase' }}>
+                        {order.deliveryStatus === 'order_placed' ? 'Order Placed' : order.deliveryStatus === 'packed' ? 'Packed 📦' : order.deliveryStatus === 'out_for_delivery' ? 'Out for Delivery' : order.deliveryStatus === 'delivered' ? 'Delivered' : order.status === 'cancelled' ? 'Cancelled' : order.status || 'pending'}
+                      </span>
                     </div>
                   </div>
 
@@ -409,6 +411,16 @@ export default function OrderHistoryPage() {
                           {order.paymentMethod || (order.paymentStatus === 'unpaid' ? 'Cash on Delivery' : 'Online Payment')}
                         </p>
                       </div>
+
+                      {order.delivery && (
+                        <div className="info-group" style={{ marginTop: '1rem' }}>
+                          <div className="info-title">🚚 Delivery</div>
+                          <p className="info-val" style={{ fontSize: '0.85rem' }}>
+                            <span style={{ fontSize: '1rem' }}>{order.delivery.carrierLogo || '⚡'}</span> {order.delivery.carrierName} {order.delivery.speedLabel}<br />
+                            <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Expected by {order.delivery.estimatedLabel || 'N/A'}</span>
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Delivery track timeline details column */}
@@ -431,6 +443,14 @@ export default function OrderHistoryPage() {
                         <span>Total Paid:</span>
                         <strong>₹{(order.grandTotal || order.total)?.toFixed(2)}</strong>
                       </div>
+                      <button 
+                        type="button" 
+                        className="neo-btn" 
+                        onClick={() => navigate(`/orders/${order.id}`)}
+                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem', borderColor: '#f5c400', color: '#f5c400' }}
+                      >
+                        Track Order
+                      </button>
                       <button 
                         type="button" 
                         className="neo-btn" 

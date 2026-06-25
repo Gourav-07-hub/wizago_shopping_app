@@ -135,6 +135,7 @@ export default function AuthPage({ onAuth }) {
 
   return (
     <div className="auth-page">
+      <div className="magic-circle" aria-hidden="true" />
       <div className="auth-brand-header">
         <Wand2 size={24} />
         <span>Wizago Shop</span>

@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
-  LogOut, ArrowLeft, X, Package, Clock, CheckCircle, 
-  AlertCircle, MapPin, User, CreditCard, TrendingUp, 
-  Calendar, Edit, FileText, ShoppingCart
+  LogOut, ArrowLeft, X, Package, Clock,
+  User, Edit, FileText, ShoppingCart
 } from 'lucide-react';
 import { api } from '../api';
 import './VendorOrdersPage.css';
 
 // Reusable vertical timeline component
-function OrderTimeline({ timeline = [], currentPriority = 'normal', status = 'pending' }) {
+function OrderTimeline({ timeline = [], status = 'pending' }) {
   // Define standard timeline events in sequential order
   const standardEvents = [
     { type: 'placed', name: 'Order Placed', match: 'Order Placed', color: 'green' },
@@ -100,7 +99,7 @@ function ProcessOrderModal({ isOpen, order, employees, onClose, onSave }) {
 
   useEffect(() => {
     if (order) {
-      setStep(1);
+      setStep(1); // eslint-disable-line react-hooks/set-state-in-effect
       setCustName(order.customer?.name || order.customerName || '');
       setCustEmail(order.customer?.email || '');
       setCustState(order.customer?.state || '');
@@ -235,6 +234,8 @@ function ProcessOrderModal({ isOpen, order, employees, onClose, onSave }) {
       deliveryMethod,
       assignedEmployee: assignedEmp,
       notes,
+      // Preserve delivery info from order if not overwritten
+      delivery: order.delivery || undefined,
     };
 
     onSave(updatedOrder, markAsDelivered);
@@ -440,16 +441,26 @@ function ProcessOrderModal({ isOpen, order, employees, onClose, onSave }) {
                 </div>
 
                 <div className="modal-input-group">
-                  <label>Delivery Method</label>
+                  <label>Delivery Partner *</label>
                   <select
                     className="modal-inline-select"
                     value={deliveryMethod}
                     onChange={e => setDeliveryMethod(e.target.value)}
                   >
+                    {order.delivery && (
+                      <option value={`${order.delivery.carrierName} ${order.delivery.speedLabel}`}>
+                        {order.delivery.carrierLogo} {order.delivery.carrierName} — {order.delivery.speedLabel} · ₹{order.delivery.deliveryFee}
+                      </option>
+                    )}
                     <option value="Standard Ground Owl">Standard Ground Owl (₹0.00)</option>
                     <option value="Phoenix Air Express">Phoenix Air Express (+₹15.00)</option>
                     <option value="Instant Teleport">Instant Teleport (+₹45.00)</option>
                   </select>
+                  {order.delivery && order.delivery.estimatedLabel && (
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.25rem' }}>
+                      🕐 Dispatch by today to meet delivery promise: {order.delivery.estimatedLabel}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -498,6 +509,22 @@ function ProcessOrderModal({ isOpen, order, employees, onClose, onSave }) {
                   <div className="info-row-custom">
                     <span className="info-row-label">Shipping method</span>
                     <span className="info-row-val">{deliveryMethod}</span>
+                  </div>
+                  <div className="info-row-custom">
+                    <span className="info-row-label">Payment method</span>
+                    <span className="info-row-val" style={{ textTransform: 'uppercase' }}>
+                      {order.paymentMethod === 'razorpay' ? '💳 Razorpay (Online)' : '🏠 Cash on Delivery'}
+                    </span>
+                  </div>
+                  <div className="info-row-custom">
+                    <span className="info-row-label">Payment status</span>
+                    <span className="info-row-val" style={{
+                      textTransform: 'uppercase',
+                      color: order.paymentStatus === 'unpaid' ? '#ed8936' : '#48bb78',
+                      fontWeight: 'bold'
+                    }}>
+                      {order.paymentStatus || 'unpaid'}
+                    </span>
                   </div>
                   {notes && (
                     <div className="info-row-custom full-width">
@@ -739,7 +766,9 @@ export default function VendorOrdersPage({ user, onLogout }) {
         },
         {
           event: "Payment",
-          detail: order.paymentStatus === 'paid' ? "Paid" : "Skipped / Unpaid",
+          detail: order.paymentMethod === 'razorpay'
+            ? `Paid ₹${grandTotal.toFixed(2)} via Razorpay · ID: ${order.paymentDetails?.paymentId || 'N/A'}`
+            : "Cash on Delivery — Pay when order arrives",
           timestamp: order.date || new Date().toLocaleString('en-IN')
         }
       ];
@@ -768,7 +797,9 @@ export default function VendorOrdersPage({ user, onLogout }) {
 
     const createdAt = order.createdAt || new Date().toISOString();
     const deliveredAt = order.deliveredAt || null;
-    const paymentStatus = order.paymentStatus || (order.paymentMethod === 'Cash on Delivery' ? 'unpaid' : 'paid');
+    const paymentStatus = order.paymentStatus || (order.paymentMethod === 'cod' ? 'unpaid' : 'paid');
+    const paymentMethod = order.paymentMethod || (paymentStatus === 'paid' ? 'razorpay' : 'cod');
+    const paymentDetails = order.paymentDetails || null;
 
     return {
       ...order,
@@ -787,6 +818,8 @@ export default function VendorOrdersPage({ user, onLogout }) {
       notes,
       status,
       paymentStatus,
+      paymentMethod,
+      paymentDetails,
       timeline,
       createdAt,
       deliveredAt
@@ -797,7 +830,7 @@ export default function VendorOrdersPage({ user, onLogout }) {
     // Load and normalize orders
     const saved = JSON.parse(localStorage.getItem('wizago_orders') || '[]');
     const normalized = saved.map(normalizeOrder);
-    setOrders(normalized);
+    setOrders(normalized); // eslint-disable-line react-hooks/set-state-in-effect
 
     // Fetch employee list
     api.employees.list().then(list => {
@@ -871,16 +904,34 @@ export default function VendorOrdersPage({ user, onLogout }) {
       timestamp: timestampStr
     });
 
+    // Update delivery status to packed (Phase 2 complete)
+    const deliveryInfo = finalOrder.delivery;
+    currentTimeline = currentTimeline.filter(t => t.event !== "Packed & Dispatched");
+    currentTimeline.push({
+      event: "Packed & Dispatched",
+      detail: deliveryInfo
+        ? `Handed to ${deliveryInfo.carrierName} ${deliveryInfo.speedLabel}`
+        : "Packed and dispatched",
+      timestamp: timestampStr
+    });
+    finalOrder.deliveryStatus = 'packed';
+
     if (markAsDelivered) {
       finalOrder.status = 'delivered';
       finalOrder.deliveredAt = new Date().toISOString();
-      finalOrder.paymentStatus = 'paid'; // Automatically marked paid on final delivery completion
+      finalOrder.paymentStatus = 'paid';
+      finalOrder.deliveryStatus = 'delivered';
 
       // Remove legacy Delivered and add latest
       currentTimeline = currentTimeline.filter(t => t.event !== "Delivered");
+      const deliveryDate = deliveryInfo?.estimatedDate
+        ? new Date(deliveryInfo.estimatedDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+        : new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
       currentTimeline.push({
         event: "Delivered",
-        detail: "Order marked as delivered by vendor",
+        detail: deliveryInfo
+          ? `Delivered by ${deliveryInfo.carrierName} on ${deliveryDate}`
+          : "Order marked as delivered by vendor",
         timestamp: timestampStr
       });
       
@@ -996,12 +1047,28 @@ export default function VendorOrdersPage({ user, onLogout }) {
                   <div className="order-item-left">
                     <span className="order-item-id">#{order.id}</span>
                     <span className="order-item-cust">{order.customer?.name}</span>
+                    {order.paymentMethod === 'razorpay' && order.paymentDetails?.paymentId && (
+                      <span className="order-item-payid" style={{ fontSize: '0.65rem', color: '#cbd5e0', fontFamily: 'monospace', display: 'block', marginTop: '0.15rem' }}>
+                        ID: {order.paymentDetails.paymentId}
+                      </span>
+                    )}
                   </div>
                   <div className="order-item-right">
                     <span className="order-item-amt">₹{(order.grandTotal || order.total || 0).toFixed(2)}</span>
-                    <span className={badgeClass}>
-                      {order.status === 'delivered' ? 'Delivered' : order.priority === 'urgent' ? 'Urgent' : 'Pending'}
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'flex-end' }}>
+                      <span className={badgeClass}>
+                        {order.status === 'delivered' ? 'Delivered' : order.priority === 'urgent' ? 'Urgent' : 'Pending'}
+                      </span>
+                      {order.paymentMethod === 'razorpay' ? (
+                        <span className="payment-badge-pill paid" style={{ fontSize: '0.6rem', padding: '0.1rem 0.3rem', borderRadius: '3px', fontWeight: 'bold', border: '1px solid #48bb78', color: '#48bb78', backgroundColor: 'rgba(72,187,120,0.1)' }}>
+                          PAID
+                        </span>
+                      ) : (
+                        <span className="payment-badge-pill unpaid" style={{ fontSize: '0.6rem', padding: '0.1rem 0.3rem', borderRadius: '3px', fontWeight: 'bold', border: '1px solid #ed8936', color: '#ed8936', backgroundColor: 'rgba(237,137,86,0.1)' }}>
+                          UNPAID
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -1059,11 +1126,25 @@ export default function VendorOrdersPage({ user, onLogout }) {
                         <span className="info-row-val">{selectedOrder.customer?.state || 'N/A'}</span>
                       </div>
                       <div className="info-row-custom">
+                        <span className="info-row-label">Payment method</span>
+                        <span className="info-row-val" style={{ textTransform: 'uppercase' }}>
+                          {selectedOrder.paymentMethod === 'razorpay' ? '💳 Razorpay (Online)' : '🏠 Cash on Delivery'}
+                        </span>
+                      </div>
+                      <div className="info-row-custom">
                         <span className="info-row-label">Payment status</span>
-                        <span className="info-row-val" style={{ textTransform: 'uppercase', color: selectedOrder.paymentStatus === 'unpaid' ? '#e53e3e' : '#48bb78' }}>
+                        <span className="info-row-val" style={{ textTransform: 'uppercase', color: selectedOrder.paymentStatus === 'unpaid' ? '#ed8936' : '#48bb78', fontWeight: 'bold' }}>
                           {selectedOrder.paymentStatus || 'unpaid'}
                         </span>
                       </div>
+                      {selectedOrder.paymentMethod === 'razorpay' && selectedOrder.paymentDetails?.paymentId && (
+                        <div className="info-row-custom full-width">
+                          <span className="info-row-label">Razorpay Payment ID</span>
+                          <span className="info-row-val" style={{ fontFamily: 'monospace', color: '#cbd5e0' }}>
+                            {selectedOrder.paymentDetails.paymentId}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
