@@ -299,26 +299,80 @@
 }
 
 .auth-avatar-circle {
-  width: 80px; height: 80px;
-  border: 2px dashed rgba(139,0,0,0.4);
-  background: rgba(10,10,15,0.8);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative;
-  color: var(--color-mist);
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
+  background: rgba(15, 10, 25, 0.9);
+  border: 2px solid rgba(124, 58, 237, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 auto 8px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+  animation: avatarPulse 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes avatarPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(124,58,237,0.3); }
+  50%       { box-shadow: 0 0 25px rgba(124,58,237,0.7); }
 }
 
 .auth-avatar-circle:hover {
-  border-color: var(--color-crimson);
-  color: var(--color-crimson);
-  box-shadow: var(--glow-red);
+  border-color: rgba(220, 20, 60, 0.6);
+  box-shadow: 0 0 25px rgba(220, 20, 60, 0.4);
+  transform: scale(1.05);
 }
 
-.auth-avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
-.auth-avatar-label { font-size: 0.75rem; font-weight: 600; color: var(--color-mist); }
+.auth-avatar-camera-icon {
+  color: rgba(124, 58, 237, 0.8) !important;
+  margin-bottom: 4px;
+}
+
+.auth-avatar-upload-text {
+  font-size: 10px;
+  color: rgba(144, 144, 168, 0.8);
+  letter-spacing: 0.5px;
+}
+
+.auth-avatar-circle.has-preview {
+  border-color: #dc143c;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+  animation: none;
+}
+
+.auth-avatar-edit-overlay {
+  width: 24px;
+  height: 24px;
+  background: #dc143c;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: white;
+}
+
+.auth-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auth-avatar-label {
+  font-size: 12px;
+  color: rgba(144, 144, 168, 0.7);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
 
 .auth-avatar-spinner {
   position: absolute;

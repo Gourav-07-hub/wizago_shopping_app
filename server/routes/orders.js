@@ -6,12 +6,22 @@ const router = Router();
 
 router.post('/', protect, async (req, res) => {
   try {
+    const orderId = req.body.orderId || `ORD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const deliveryCode = req.body.deliveryCode || String(Math.floor(100000 + Math.random() * 900000));
     const order = await Order.create({
       ...req.body,
-      'customer.userId': req.user.id,
+      orderId,
+      deliveryCode,
+      customer: {
+        ...(req.body.customer || {}),
+        userId: req.user._id,
+      },
     });
     res.status(201).json({ success: true, order });
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ success: false, message: error.message });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });

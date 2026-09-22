@@ -2274,37 +2274,127 @@ code, pre, .mono-text {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
   z-index: 4;
 }
 
 .hero-dot {
-  width: 10px; height: 10px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: 2px solid rgba(139,0,0,0.5);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(220, 20, 60, 0.4);
+  transition: all 0.3s;
   cursor: pointer;
   padding: 0;
-  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .hero-dot.active {
-  background: var(--color-blood);
-  border-color: var(--color-crimson);
-  box-shadow: var(--glow-red);
+  width: 28px;
+  height: 10px;
+  border-radius: 5px;
+  background: #dc143c;
+  border: none;
+  box-shadow: 0 0 12px rgba(220, 20, 60, 0.8);
   animation: dotPulse 1.5s ease-in-out infinite;
 }
 
 @keyframes dotPulse {
-  0%, 100% { box-shadow: 0 0 5px rgba(220,20,60,0.5); }
-  50%       { box-shadow: 0 0 12px rgba(220,20,60,0.9); }
+  0%, 100% { box-shadow: 0 0 8px rgba(220,20,60,0.6); }
+  50%       { box-shadow: 0 0 18px rgba(220,20,60,1); }
 }
 
 /* ── Home Search ─────────────────────────────────────────────*/
 .home-search-section {
-  max-width: 1400px;
+  max-width: 700px;
   margin: 1.5rem auto 0;
-  padding: 0 1.5rem;
+  padding: 16px 20px;
+  position: relative;
+}
+
+.home-search-section .search-bar-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.home-search-section .search-bar-input-group {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  display: block;
+}
+
+.home-search-section .search-bar-input-group:focus-within {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.home-search-section .search-bar-input {
+  width: 100%;
+  background: rgba(15, 15, 26, 0.9);
+  border: 1px solid rgba(139, 0, 0, 0.3);
+  border-radius: 30px;
+  padding: 14px 20px 14px 48px;
+  color: #e8e8f0;
+  font-family: 'Crimson Text', serif;
+  font-size: 16px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.home-search-section .search-bar-input::placeholder {
+  color: rgba(144, 144, 168, 0.5);
+  font-style: italic;
+  opacity: 1;
+}
+
+.home-search-section .search-bar-input:focus {
+  border-color: #dc143c;
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1),
+              0 0 20px rgba(139, 0, 0, 0.2);
+  background: rgba(20, 10, 20, 0.95);
+}
+
+.home-search-section .search-bar-icon {
+  position: absolute;
+  left: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(220, 20, 60, 0.6);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.home-search-section .search-bar-clear {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(144, 144, 168, 0.6);
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.home-search-section .search-bar-clear:hover {
+  color: #dc143c;
+}
+
+.home-search-section .search-live-dropdown,
+.home-search-section .search-history-dropdown {
+  left: 20px;
+  right: 20px;
+  top: calc(100% - 16px);
+  border-radius: 8px;
 }
 
 /* ── Category Chips ─────────────────────────────────────────*/

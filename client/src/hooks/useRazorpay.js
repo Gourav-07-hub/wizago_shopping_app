@@ -44,7 +44,7 @@ export function useRazorpay() {
       currency: "INR",
       name: "Wizago Shop",
       description: `Order #${orderId}`,
-      image: "/logo.png",
+      image: "/favicon.svg",
       
       prefill: {
         name: customerName,

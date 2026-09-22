@@ -23,42 +23,64 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json({ success: true, product });
   } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid product id' });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 router.post('/', protect, vendorOnly, async (req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const product = await Product.create({ ...req.body, vendorId: req.user._id });
     res.status(201).json({ success: true, product });
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ success: false, message: error.message });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 router.put('/:id', protect, vendorOnly, async (req, res) => {
   try {
+    const existing = await Product.findById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+    // Enforce ownership for products that have an owner; legacy products
+    // without vendorId remain editable by any vendor to avoid lockout.
+    if (existing.vendorId && existing.vendorId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not your product' });
+    }
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
-    if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    }
     res.status(200).json({ success: true, product });
   } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid product id' });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 router.delete('/:id', protect, vendorOnly, async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) {
+    const existing = await Product.findById(req.params.id);
+    if (!existing) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
+    if (existing.vendorId && existing.vendorId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not your product' });
+    }
+    await existing.deleteOne();
     res.status(200).json({ success: true, message: 'Product deleted' });
   } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid product id' });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });

@@ -34,6 +34,9 @@ router.put('/partners/:id', protect, vendorOnly, async (req, res) => {
     }
     res.status(200).json({ success: true, partner });
   } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid partner id' });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -46,6 +49,9 @@ router.delete('/partners/:id', protect, vendorOnly, async (req, res) => {
     }
     res.status(200).json({ success: true, message: 'Partner deleted' });
   } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid partner id' });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -71,7 +77,7 @@ router.put('/assign/:orderId', protect, vendorOnly, async (req, res) => {
   }
 });
 
-router.put('/verify/:orderId', async (req, res) => {
+router.put('/verify/:orderId', protect, vendorOnly, async (req, res) => {
   try {
     const { deliveryCode } = req.body;
     const order = await Order.findOne({ orderId: req.params.orderId });

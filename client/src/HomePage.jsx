@@ -508,7 +508,7 @@ export default function HomePage({ user, onLogout }) {
                   <button className="neo-btn primary" onClick={() => { addToCart(quickView, quickViewQty); setQuickView(null); }}>
                     <ShoppingCart size={14} /> Add to Cart
                   </button>
-                  <button className="neo-btn success" onClick={() => { addToCart(quickView, quickViewQty); navigate('/pos'); }}>
+                  <button className="neo-btn success" onClick={() => { addToCart(quickView, quickViewQty); navigate('/checkout'); }}>
                     Buy Now
                   </button>
                 </div>
@@ -537,7 +537,7 @@ export default function HomePage({ user, onLogout }) {
             <h4>Quick Links</h4>
             <Link to="/">Home</Link>
             <Link to="/">Products</Link>
-            <Link to="/pos">Orders</Link>
+            <Link to="/orders">Orders</Link>
             <Link to="/">Contact</Link>
           </div>
           <div className="footer-column">

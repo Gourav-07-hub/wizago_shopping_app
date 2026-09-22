@@ -28,6 +28,23 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/delivery', deliveryRoutes);
 
+// 404 for unknown API routes (must come after all routes)
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, message: 'API route not found' });
+});
+
+// Global error handler (works with express-async-errors)
+app.use((err, req, res, next) => {
+  if (err?.name === 'CastError') {
+    return res.status(400).json({ success: false, message: 'Invalid id format' });
+  }
+  if (err?.name === 'ValidationError') {
+    return res.status(400).json({ success: false, message: err.message });
+  }
+  console.error('Unhandled error:', err);
+  res.status(500).json({ success: false, message: 'Internal server error' });
+});
+
 const MONGO_URI = process.env.MONGODB_URI;
 if (!MONGO_URI || !MONGO_URI.startsWith('mongodb')) {
   console.error('❌ MONGODB_URI is missing or invalid. Set it in your environment variables.');

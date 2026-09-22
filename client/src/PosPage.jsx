@@ -13,9 +13,9 @@ import { useNavigate } from 'react-router-dom';
 
 const MOCK_EMPLOYEES = [];
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'Dekds6naj';
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'default_bear';
-const API_KEY = 'EhBZCQ3j_NzLNIotVzla2CBxcGo';
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '';
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || '';
+const API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY || '';
 
 const QUICK_PRODUCTS = [
   { name: 'Glow-in-the-dark Spark Wand', category: 'Accessories', price: 45.00, tax: 8, discount: 5 },
@@ -85,7 +85,7 @@ export default function PosPage({ user, onLogout }) {
 
   // --- LOCKED TOOLTIP STATE ---
   const [showLockedTip, setShowLockedTip] = useState({ step2: false, step3: false });
-  const idCounter = useRef(0);
+  const idCounter = useRef(100000);
 
   const resetInvoiceMeta = () => {
     const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -955,7 +955,8 @@ function EditProfileModal({ user, onClose, onSave }) {
         if (email !== user.email) body.email = email;
         if (newPassword) { body.currentPassword = currentPassword; body.newPassword = newPassword; }
         
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const RAW_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const API_URL = RAW_API_URL.replace(/\/api\/?$/, '');
         const res = await fetch(`${API_URL}/api/auth/profile`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

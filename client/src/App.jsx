@@ -44,6 +44,16 @@ function AuthRoute({ user, children }) {
   return children;
 }
 
+// Placeholder for vendor sections not yet built (prevents 404s from dashboard quick links)
+function VendorPlaceholder({ title, description }) {
+  return (
+    <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+      <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{title}</h1>
+      <p style={{ opacity: 0.7 }}>{description || 'This section is coming soon.'}</p>
+    </div>
+  );
+}
+
 function App() {
   const navigate = useNavigate();
   const [user, setUser] = useState(() => {
@@ -164,6 +174,26 @@ function App() {
         <Route path="/vendor/pos" element={
           <VendorRoute user={user}>
             <PosPage user={user} onLogout={triggerLogout} />
+          </VendorRoute>
+        } />
+        <Route path="/vendor/products" element={
+          <VendorRoute user={user}>
+            <VendorPlaceholder title="Manage Products" description="Add, edit, or remove products from your store inventory. Coming soon." />
+          </VendorRoute>
+        } />
+        <Route path="/vendor/delivery-partners" element={
+          <VendorRoute user={user}>
+            <VendorPlaceholder title="Delivery Partners" description="Assign and manage your delivery agents. Coming soon." />
+          </VendorRoute>
+        } />
+        <Route path="/vendor/reports" element={
+          <VendorRoute user={user}>
+            <VendorPlaceholder title="Revenue Reports" description="Monthly revenue and sales analytics. Coming soon." />
+          </VendorRoute>
+        } />
+        <Route path="/vendor/settings" element={
+          <VendorRoute user={user}>
+            <VendorPlaceholder title="Shop Settings" description="Update your shop name, contact info, and preferences. Coming soon." />
           </VendorRoute>
         } />
 

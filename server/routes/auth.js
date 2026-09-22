@@ -6,14 +6,17 @@ import { protect } from '../middleware/auth.js';
 const router = Router();
 
 const generateToken = (id) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: process.env.JWT_EXPIRE || '7d',
   });
 };
 
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role, shopName, phone } = req.body;
+    const { name, email, password, role, shopName, phone, avatar } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -23,13 +26,18 @@ router.post('/register', async (req, res) => {
       });
     }
 
+    // Prevent privilege escalation: only allow known roles, default to customer.
+    // Vendor self-registration is permitted but never trust admin-like roles.
+    const safeRole = role === 'vendor' ? 'vendor' : 'customer';
+
     const user = await User.create({
       name,
       email,
       password,
-      role: role || 'customer',
-      shopName: role === 'vendor' ? shopName : null,
+      role: safeRole,
+      shopName: safeRole === 'vendor' ? shopName : null,
       phone,
+      avatar: avatar || null,
     });
 
     const token = generateToken(user._id);
@@ -45,6 +53,7 @@ router.post('/register', async (req, res) => {
         role: user.role,
         shopName: user.shopName,
         phone: user.phone,
+        avatar: user.avatar || null,
       },
     });
   } catch (error) {
@@ -95,6 +104,7 @@ router.post('/login', async (req, res) => {
         role: user.role,
         shopName: user.shopName,
         phone: user.phone,
+        avatar: user.avatar || null,
       },
     });
   } catch (error) {

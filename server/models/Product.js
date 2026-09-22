@@ -9,6 +9,7 @@ const ProductSchema = new mongoose.Schema({
   stock: { type: Number, default: 0 },
   tax: { type: Number, default: 8 },
   discount: { type: Number, default: 0 },
+  vendorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   createdAt: { type: Date, default: Date.now },
 });
 

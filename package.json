@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "build": "cd client && npm run build",
-    "dev": "cd client && npm run dev"
+    "dev": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "start:server": "cd server && npm start"
   }
 }

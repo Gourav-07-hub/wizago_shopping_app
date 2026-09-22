@@ -16,8 +16,20 @@ export const protect = async (req, res, next) => {
   }
 
   try {
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message: 'Server misconfigured — JWT_SECRET is missing',
+      });
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id);
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized — user no longer exists',
+      });
+    }
     next();
   } catch (error) {
     return res.status(401).json({

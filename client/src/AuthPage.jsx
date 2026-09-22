@@ -47,6 +47,7 @@ export default function AuthPage({ onAuth }) {
       role,
       shopName: role === 'vendor' ? form.shopName : null,
       phone: '',
+      avatar: avatarPreview || null,
     });
 
     localStorage.setItem('wizago_token', result.token);
@@ -151,11 +152,19 @@ export default function AuthPage({ onAuth }) {
           {mode === 'register' && (
             <>
               <div className="auth-avatar-section">
-                <div className="auth-avatar-circle" onClick={() => fileRef.current?.click()}>
+                <div className={`auth-avatar-circle ${avatarPreview ? 'has-preview' : ''}`} onClick={() => fileRef.current?.click()}>
                   {avatarPreview ? (
-                    <img src={avatarPreview} alt="Avatar preview" />
+                    <>
+                      <img src={avatarPreview} alt="Avatar preview" />
+                      <div className="auth-avatar-edit-overlay">
+                        ✎
+                      </div>
+                    </>
                   ) : (
-                    <Camera size={22} />
+                    <>
+                      <Camera size={24} className="auth-avatar-camera-icon" />
+                      <span className="auth-avatar-upload-text">Upload Photo</span>
+                    </>
                   )}
                 </div>
                 <span className="auth-avatar-label">Upload Profile Picture</span>
