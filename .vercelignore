@@ -1,0 +1,11 @@
+node_modules/
+**/node_modules/
+.env
+**/.env
+**/.env.local
+**/.env.production
+server/.env
+client/.env
+dist/
+**/dist/
+.git/

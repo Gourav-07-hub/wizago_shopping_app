@@ -13,8 +13,28 @@ import deliveryRoutes from './routes/delivery.js';
 
 const app = express();
 
+// Allow local development, the configured client origin(s), and this
+// project's Vercel production/preview deployments.
+const configuredOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = new Set([
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  ...configuredOrigins,
+]);
+
+const vercelOriginPattern = /^https:\/\/wizago-shopping-[a-z0-9-]+\.vercel\.app$/;
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin) || vercelOriginPattern.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
   credentials: true,
 }));
 app.use(express.json());
